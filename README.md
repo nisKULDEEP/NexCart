@@ -136,8 +136,8 @@ This system consists of multiple microservices, each responsible for a specific 
 
 ### Prerequisites
 
-- **Java 11+** or higher
-- **Maven 3.6+**
+- **Java 17** (LTS) or higher
+- **Maven 3.8.1+** (latest stable)
 - **Docker** & **Docker Compose**
 - **Git** for version control
 - **Postman** or **curl** for API testing (optional)
@@ -399,18 +399,24 @@ cd services/product
 
 ## 📝 Technology Stack
 
-- **Java 11+** - Programming language
-- **Spring Boot 2.7+** - Microservice framework
-- **Spring Cloud** - Distributed service support (Eureka, Config Server, Feign)
+- **Java 17** (LTS) - Modern, long-term support version with enhanced performance
+- **Spring Boot 3.3.0** - Latest stable microservice framework
+- **Spring Cloud 2024.0.0** - Latest distributed service support (Eureka, Config Server, Feign)
 - **Spring Data JPA** - ORM for database access
-- **Spring Data Redis** - Redis integration
-- **Kafka** - Event streaming and message broker
+- **Spring Data Redis** - Redis integration for caching
+- **Apache Kafka** - Event streaming and message broker
 - **PostgreSQL** - Relational database
 - **Redis** - In-memory cache
-- **Maven** - Build and dependency management
+- **Maven 3.8.1+** - Build and dependency management
 - **Docker** - Containerization
 - **Docker Compose** - Container orchestration
 - **Eureka** - Service discovery and registration
+
+**Version Updates:**
+- ✅ Java upgraded: 11 → 17 (LTS, better performance)
+- ✅ Spring Boot upgraded: 3.2.5 → 3.3.0 (latest stable)
+- ✅ Spring Cloud upgraded: 2023.0.1 → 2024.0.0 (latest)
+- ✅ All 8 microservices updated
 
 ---
 
@@ -521,7 +527,13 @@ This project is provided as-is for educational and commercial use.
 ---
 
 **Last Updated:** March 26, 2026  
-**Version:** 2.0 (Redis & Caching Implementation Complete)
+**Version:** 2.1 (Redis Implementation + Technology Stack Upgrade Complete)
 
 **Project:** NexCart - Next-Generation E-commerce Platform  
 **Tagline:** Fast. Smart. Scalable. Enterprise-grade microservices commerce platform.
+
+**Technology Stack Updated:**
+- Java: 17 LTS ✅
+- Spring Boot: 3.3.0 ✅
+- Spring Cloud: 2024.0.0 ✅
+
