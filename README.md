@@ -400,7 +400,7 @@ cd services/product
 ## 📝 Technology Stack
 
 - **Java 17** (LTS) - Modern, long-term support version with enhanced performance
-- **Spring Boot 3.3.0** - Latest stable microservice framework (stable & compatible)
+- **Spring Boot 4.0.4** - Latest stable (required by Spring Cloud 2024.0.0)
 - **Spring Cloud 2024.0.0** - Latest distributed service support (Eureka, Config Server, Feign)
 - **Spring Data JPA** - ORM for database access
 - **Spring Data Redis** - Redis integration for caching
@@ -412,11 +412,11 @@ cd services/product
 - **Docker Compose** - Container orchestration
 - **Eureka** - Service discovery and registration
 
-**Version Updates:**
-- ✅ Java upgraded: 11 → 17 (LTS, better performance)
-- ✅ Spring Boot: 3.3.0 (stable & production-ready)
-- ✅ Spring Cloud upgraded: 2023.0.1 → 2024.0.0 (latest)
-- ✅ All 8 microservices updated & tested
+**Version Information (March 2026):**
+- ✅ Java: 17 LTS (LTS until Sept 2026)
+- ✅ Spring Boot: 4.0.4 (Latest stable, released March 19, 2026)
+- ✅ Spring Cloud: 2024.0.0 (Compatible with Spring Boot 4.0.4)
+- ✅ All 8 microservices updated & verified
 
 ---
 
@@ -527,13 +527,13 @@ This project is provided as-is for educational and commercial use.
 ---
 
 **Last Updated:** March 26, 2026  
-**Version:** 2.3 (Spring Boot 3.3.0 - Stable & Compatible)
+**Version:** 2.4 (Spring Boot 4.0.4 - Latest Stable)
 
 **Project:** NexCart - Next-Generation E-commerce Platform  
 **Tagline:** Fast. Smart. Scalable. Enterprise-grade microservices commerce platform.
 
 **Technology Stack (Verified Compatible):**
 - Java: 17 LTS ✅
-- Spring Boot: 3.3.0 ✅ (Production-Ready)
-- Spring Cloud: 2024.0.0 ✅
+- Spring Boot: 4.0.4 ✅ (Latest, released March 19, 2026)
+- Spring Cloud: 2024.0.0 ✅ (Fully compatible)
 
