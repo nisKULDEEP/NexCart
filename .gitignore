@@ -1,0 +1,141 @@
+# Git ignore file for Order Processing Microservices System
+# This file ensures only actual project code is committed, not documentation/build artifacts
+
+# ========================================
+# DOCUMENTATION & INTERNAL TRACKING
+# ========================================
+# All phase documentation, implementation guides, and internal tracking files
+.documentation/
+PHASE*.md
+GIT_COMMIT_STRATEGY.md
+
+# ========================================
+# IDE & EDITOR FILES
+# ========================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.iws
+*.ipr
+._*
+.DS_Store
+
+
+# ========================================
+# BUILD & COMPILATION
+# ========================================
+target/
+build/
+.gradle/
+*.class
+*.jar
+*.war
+*.nar
+*.zip
+*.tar.gz
+*.rar
+out/
+
+# ========================================
+# MAVEN
+# ========================================
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ========================================
+# GRADLE
+# ========================================
+.gradle
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# ========================================
+# TESTING
+# ========================================
+.coverage
+coverage/
+.pytest_cache/
+.tox/
+*.cover
+*.log
+
+# ========================================
+# DATABASE & LOCAL DATA
+# ========================================
+*.db
+*.sqlite
+*.sqlite3
+database/
+data/
+.postgres/
+.mongodb/
+.redis/
+
+# ========================================
+# DOCKER
+# ========================================
+.docker/
+docker-compose.override.yml
+
+# ========================================
+# ENVIRONMENT FILES
+# ========================================
+.env
+.env.local
+.env.*.local
+*.properties.local
+application-local.yml
+.secrets/
+secrets/
+
+# ========================================
+# OS SPECIFIC
+# ========================================
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ========================================
+# TEMPORARY FILES
+# ========================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*~
+
+# ========================================
+# LOGS
+# ========================================
+logs/
+*.log
+*.log.*
+
+# ========================================
+# CACHE
+# ========================================
+.cache/
+node_modules/
+
+# ========================================
+# MISCELLANEOUS
+# ========================================
+.classpath
+.project
+.settings/
+*.orig
+
