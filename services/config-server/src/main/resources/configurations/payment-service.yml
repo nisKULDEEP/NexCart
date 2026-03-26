@@ -3,12 +3,12 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/payment
-    username: niskuldeep
-    password: niskuldeep
+    url: jdbc:postgresql://localhost:5432/payment_db
+    username: postgres
+    password: postgres
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
