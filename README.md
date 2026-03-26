@@ -1,4 +1,5 @@
-# Microservices E-commerce System Services
+# NexCart
+## Next-Generation E-commerce Platform
 
 A comprehensive, scalable microservices-based e-commerce platform built with Spring Boot, featuring distributed service architecture, API Gateway, Service Discovery, Config Server, and Redis caching layer.
 
@@ -302,7 +303,7 @@ curl -X POST http://localhost:8060/payments \
 
 ### Using Postman
 
-Import the provided Postman collection: `Microservices E-commerce System Services.postman_collection.json`
+Import the provided Postman collection: `NexCart-API-Collection.postman_collection.json`
 
 This collection includes all available endpoints for testing and development.
 
@@ -418,7 +419,7 @@ cd services/product
 - **Phase-wise Implementation Guide:** See `.documentation/PHASE_WISE_PLAN.md`
 - **Redis Implementation Details:** See `.documentation/PHASE_2_REDIS_IMPLEMENTATION.md`
 - **Database Schema:** See `diagrams/DATABASE_SCHEMA_DESIGN.md`
-- **API Testing:** Import `Microservices E-commerce System Services.postman_collection.json` into Postman
+- **API Testing:** Import `NexCart-API-Collection.postman_collection.json` into Postman
 - **Business Requirements:** See `resources/Business Needs.md`
 
 ---
@@ -521,3 +522,6 @@ This project is provided as-is for educational and commercial use.
 
 **Last Updated:** March 26, 2026  
 **Version:** 2.0 (Redis & Caching Implementation Complete)
+
+**Project:** NexCart - Next-Generation E-commerce Platform  
+**Tagline:** Fast. Smart. Scalable. Enterprise-grade microservices commerce platform.
