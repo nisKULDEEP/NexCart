@@ -1,0 +1,60 @@
+{
+  "dashboard": {
+    "title": "Kafka Consumer Monitoring",
+    "description": "Kafka consumer lag and throughput metrics",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Notification Consumer Lag (messages)",
+        "targets": [
+          {
+            "expr": "kafka_consumer_lag_sum{job=\"notification-service\"}"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 2,
+        "title": "Messages Consumed/min",
+        "targets": [
+          {
+            "expr": "rate(spring_kafka_listener_records_lag_sum[1m]) * 60"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 3,
+        "title": "Consumer Process Time (ms)",
+        "targets": [
+          {
+            "expr": "rate(spring_kafka_listener_records_lag_seconds_sum[5m]) * 1000"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 4,
+        "title": "Active Consumers",
+        "targets": [
+          {
+            "expr": "spring_kafka_consumer_active"
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "id": 5,
+        "title": "Consumer Exceptions/min",
+        "targets": [
+          {
+            "expr": "rate(spring_kafka_listener_records_lag_seconds_count{exception!=\"\"}[1m]) * 60"
+          }
+        ],
+        "type": "graph"
+      }
+    ]
+  }
+}
+

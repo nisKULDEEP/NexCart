@@ -1,0 +1,90 @@
+{
+  "dashboard": {
+    "title": "System Performance Overview",
+    "description": "System-wide performance metrics across all microservices",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Total Request Rate (req/sec)",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count[1m]))"
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "id": 2,
+        "title": "Overall Error Rate (%)",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{status=~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count[5m])) * 100"
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "id": 3,
+        "title": "P95 Response Latency (ms)",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[5m])) by (le)) * 1000"
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "id": 4,
+        "title": "Cluster JVM Memory (MB)",
+        "targets": [
+          {
+            "expr": "sum(jvm_memory_used_bytes) / 1024 / 1024"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 5,
+        "title": "Database Connections (Active)",
+        "targets": [
+          {
+            "expr": "sum(hikaricp_connections_active)"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 6,
+        "title": "Redis Connected Clients",
+        "targets": [
+          {
+            "expr": "redis_connected_clients"
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "id": 7,
+        "title": "Cache Hit Ratio",
+        "targets": [
+          {
+            "expr": "cache_gets_hit{job=\"product-service\"} / (cache_gets_hit{job=\"product-service\"} + cache_gets_miss{job=\"product-service\"}) * 100"
+          }
+        ],
+        "type": "gauge"
+      },
+      {
+        "id": 8,
+        "title": "Elasticsearch Cluster Health",
+        "targets": [
+          {
+            "expr": "elasticsearch_cluster_health_active_primary_shards"
+          }
+        ],
+        "type": "stat"
+      }
+    ]
+  }
+}
+
