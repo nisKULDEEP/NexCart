@@ -4,18 +4,18 @@
 # ========================================
 # SECURITY & CREDENTIALS - NEVER COMMIT
 # ========================================
-.env
-.env.local
-.env.*.local
-*.pem
-*.key
-*.p12
-*.pkcs12
-*.jks
-secrets/
-.secrets/
-*.keystore
-*.truststore
+.env                # User-customized environment (DO NOT COMMIT)
+# .env.local        # Example environment values (ALLOWED - safe defaults)
+.env.*.local        # Environment-specific overrides (DO NOT COMMIT)
+*.pem               # Private keys
+*.key               # Private keys
+*.p12               # Private certificates
+*.pkcs12            # Private certificates
+*.jks               # Java keystores
+secrets/            # Secrets directory
+.secrets/           # Hidden secrets
+*.keystore          # Keystores
+*.truststore        # Truststores
 
 # ========================================
 # DOCUMENTATION & INTERNAL TRACKING
