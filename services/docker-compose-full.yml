@@ -1,0 +1,289 @@
+version: '3.8'
+
+services:
+  # Infrastructure Services
+  postgresql:
+    container_name: ms_pg_sql
+    image: postgres:15
+    environment:
+      POSTGRES_USER: niskuldeep
+      POSTGRES_PASSWORD: niskuldeep
+      PGDATA: /data/postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U niskuldeep"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    container_name: ms_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - microservices-net
+
+  mongodb:
+    image: mongo
+    container_name: mongo_db
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=niskuldeep
+      - MONGO_INITDB_ROOT_PASSWORD=niskuldeep
+    networks:
+      - microservices-net
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo_express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=niskuldeep
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=niskuldeep
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    networks:
+      - microservices-net
+    depends_on:
+      - mongodb
+
+  redis:
+    image: redis:latest
+    container_name: ms_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - microservices-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: ms_kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+    networks:
+      - microservices-net
+
+  mail-dev:
+    container_name: ms-mail-dev
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - microservices-net
+
+  # Microservices
+  config-server:
+    container_name: config-server
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  discovery-service:
+    container_name: discovery-service
+    build:
+      context: ./discovery
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8222:8222"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      - discovery-service
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+
+  order-service:
+    container_name: order-service
+    build:
+      context: ./order
+      dockerfile: Dockerfile
+    ports:
+      - "8070:8070"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      - discovery-service
+      - postgresql
+      - kafka
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/order
+      SPRING_DATASOURCE_USERNAME: niskuldeep
+      SPRING_DATASOURCE_PASSWORD: niskuldeep
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  payment-service:
+    container_name: payment-service
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      - discovery-service
+      - mongodb
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATA_MONGODB_URI: mongodb://niskuldeep:niskuldeep@mongodb:27017/payment?authSource=admin
+
+  product-service:
+    container_name: product-service
+    build:
+      context: ./product
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      - discovery-service
+      - postgresql
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/product
+      SPRING_DATASOURCE_USERNAME: niskuldeep
+      SPRING_DATASOURCE_PASSWORD: niskuldeep
+
+  customer-service:
+    container_name: customer-service
+    build:
+      context: ./customer
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      - discovery-service
+      - postgresql
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/customer
+      SPRING_DATASOURCE_USERNAME: niskuldeep
+      SPRING_DATASOURCE_PASSWORD: niskuldeep
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification
+      dockerfile: Dockerfile
+    ports:
+      - "8095:8095"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    depends_on:
+      - discovery-service
+      - kafka
+      - mongodb
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: mongodb://niskuldeep:niskuldeep@mongodb:27017/notification?authSource=admin
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  mongo:
+

@@ -1,4 +1,4 @@
-package com.example.product;
+package com.example.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -20,3 +20,4 @@ public record ProductRequest(
         Integer categoryId
 ) {
 }
+

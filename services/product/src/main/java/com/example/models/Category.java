@@ -1,6 +1,6 @@
-package com.example.category;
+package com.example.models;
 
-import com.example.product.Product;
+import com.example.models.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,3 +26,4 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<Product> products;
 }
+

@@ -1,6 +1,6 @@
-package com.example.product;
+package com.example.models;
 
-import com.example.category.Category;
+import com.example.models.Category;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -33,3 +33,4 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 }
+
