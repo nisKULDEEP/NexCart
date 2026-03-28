@@ -1,16 +1,14 @@
 server:
-  port: 8040
+  port: 8095
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/notification_db
-    username: postgres
-    password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    mongodb:
+      username: niskuldeep
+      password: niskuldeep
+      host: localhost
+      port: 27017
+      database: notification
+      authentication-database: admin
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
@@ -36,3 +34,29 @@ spring:
         connectiontimeout: 5000
         timeout: 3000
         writetimeout: 5000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+eureka:
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+

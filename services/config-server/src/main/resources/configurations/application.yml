@@ -12,6 +12,14 @@ spring:
       override-system-properties: false
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
   tracing:
     sampling:
       probability: 1.0

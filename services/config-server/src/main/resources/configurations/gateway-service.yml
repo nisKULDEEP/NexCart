@@ -8,22 +8,46 @@ spring:
           enabled: true
       routes:
         - id: customer-service
-          uri: lb:http://CUSTOMER-SERVICE
+          uri: lb://customer-service
           predicates:
             - Path=/api/v1/customers/**
         - id: order-service
-          uri: lb:http://ORDER-SERVICE
+          uri: lb://order-service
           predicates:
             - Path=/api/v1/orders/**
         - id: order-lines-service
-          uri: lb:http://ORDER-SERVICE
+          uri: lb://order-service
           predicates:
             - Path=/api/v1/order-lines/**
         - id: product-service
-          uri: lb:http://PRODUCT-SERVICE
+          uri: lb://product-service
           predicates:
             - Path=/api/v1/products/**
         - id: payment-service
-          uri: lb:http://PAYMENT-SERVICE
+          uri: lb://payment-service
           predicates:
             - Path=/api/v1/payments/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+eureka:
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

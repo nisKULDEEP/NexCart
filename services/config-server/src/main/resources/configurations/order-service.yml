@@ -3,12 +3,12 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/order_db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/order
+    username: niskuldeep
+    password: niskuldeep
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   kafka:
@@ -18,9 +18,38 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.type.mapping: orderConfirmation:com.example.kafka.OrderConfirmation
+  cloud:
+    loadbalancer:
+      eureka:
+        enabled: false
 
 application:
   config:
-    customer-url: http://localhost:8080/api/v1/customers
-    payment-url: http://localhost:8060/api/v1/payments
-    product-url: http://localhost:8050/api/v1/products
+    # Local development URLs - update these if running services on different ports
+    customer-url: http://localhost:8085/api/v1/customers
+    payment-url: http://localhost:8080/api/v1/payments
+    product-url: http://localhost:8090/api/v1/products
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+eureka:
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+    enabled: true
