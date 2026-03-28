@@ -23,6 +23,9 @@ spring:
       eureka:
         enabled: false
 
+  elasticsearch:
+    uris: http://localhost:9200
+
 application:
   config:
     # Local development URLs - update these if running services on different ports
