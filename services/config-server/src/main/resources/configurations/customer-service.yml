@@ -3,10 +3,10 @@ server:
 spring:
   data:
     mongodb:
-      username: niskuldeep
-      password: niskuldeep
-      host: localhost
-      port: 27017
+      username: ${MONGO_USER:niskuldeep}
+      password: ${MONGO_PASSWORD:niskuldeep}
+      host: ${MONGO_HOST:localhost}
+      port: ${MONGO_PORT:27017}
       database: customer
       authentication-database: admin
 

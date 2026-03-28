@@ -2,6 +2,22 @@
 # This file ensures only actual project code is committed, not documentation/build artifacts
 
 # ========================================
+# SECURITY & CREDENTIALS - NEVER COMMIT
+# ========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.pkcs12
+*.jks
+secrets/
+.secrets/
+*.keystore
+*.truststore
+
+# ========================================
 # DOCUMENTATION & INTERNAL TRACKING
 # ========================================
 # All phase documentation, implementation guides, and internal tracking files
